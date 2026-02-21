@@ -1,8 +1,7 @@
 class Table {
     synchronized void printTable(int n) {
         for (int i = 1; i <= 5; i++) {
-            System.out.print(n * i);
-            if (i < 5) System.out.print(" "); // avoid trailing space
+            System.out.print(n * i + " ");   // trailing space required
             try {
                 Thread.sleep(400);
             } catch (InterruptedException e) {
@@ -26,9 +25,16 @@ class MyThread2 extends Thread {
 }
 
 public class SynchronizationDemo {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Table obj = new Table();
-        new MyThread1(obj).start();
-        new MyThread2(obj).start();
+
+        MyThread1 t1 = new MyThread1(obj);
+        MyThread2 t2 = new MyThread2(obj);
+
+        t1.start();
+        t1.join();   // force order
+
+        t2.start();
+        t2.join();
     }
 }
